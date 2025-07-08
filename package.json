@@ -1,0 +1,34 @@
+{
+    "name": "wati-gemini-webhook",
+    "version": "1.0.0",
+    "description": "WATI WhatsApp webhook integrated with Google Gemini AI",
+    "main": "server.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "wati",
+        "whatsapp",
+        "webhook",
+        "gemini",
+        "ai",
+        "chatbot"
+    ],
+    "author": "Your Name",
+    "license": "MIT",
+    "dependencies": {
+        "@google/generative-ai": "^0.24.1",
+        "axios": "^1.10.0",
+        "cors": "^2.8.5",
+        "dotenv": "^17.1.0",
+        "express": "^5.1.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.10"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}
