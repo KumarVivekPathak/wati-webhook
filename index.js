@@ -74,7 +74,7 @@ app.post('/webhook', async (req, res) => {
     
     const webhookData = req.body;
     
-    // Check if this is a message webhook
+
     if (webhookData.type === 'message' && webhookData.data) {
       const { 
         whatsappMessageId,
@@ -86,26 +86,23 @@ app.post('/webhook', async (req, res) => {
         timestamp 
       } = webhookData.data;
       
-      // Extract phone number from conversation ID or use a different field
-      const phoneNumber = webhookData.data.contactPhone || 
-                         webhookData.data.phone || 
-                         conversationId.split('@')[0];
+    
+    //   const phoneNumber = webhookData.data.contactPhone || 
+    //                      webhookData.data.phone || 
+    //                      conversationId.split('@')[0];
       
-      // Only respond to messages not sent by us
+  
       if (!fromMe && text && text.trim() !== '') {
         console.log(`Processing message from ${senderName} (${phoneNumber}): ${text}`);
         
-        // Get AI response
-        const aiResponse = await getGeminiResponse(text, phoneNumber);
         
-        // Send response back via WATI
+        const aiResponse = await getGeminiResponse(text, phoneNumber);
         await sendWATIMessage(phoneNumber, aiResponse);
         
         console.log(`Response sent to ${phoneNumber}: ${aiResponse}`);
       }
     }
     
-    // Always respond with 200 OK to acknowledge receipt
     res.status(200).json({ 
       success: true, 
       message: 'Webhook processed successfully' 
@@ -153,13 +150,13 @@ app.post('/test-wati', async (req, res) => {
   }
 });
 
-// Start server
+
 app.listen(PORT, () => {
   console.log(`WATI + Gemini Webhook Server running on port ${PORT}`);
   console.log(`Webhook URL: http://localhost:${PORT}/webhook`);
   console.log(`Health check: http://localhost:${PORT}/health`);
   
-  // Check environment variables
+
   if (!process.env.GEMINI_API_KEY) {
     console.warn('⚠️  GEMINI_API_KEY not found in environment variables');
   }
@@ -168,7 +165,7 @@ app.listen(PORT, () => {
   }
 });
 
-// Graceful shutdown
+
 process.on('SIGTERM', () => {
   console.log('Received SIGTERM, shutting down gracefully');
   process.exit(0);
