@@ -7,20 +7,19 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-// WATI Configuration
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
+
 const WATI_API_ENDPOINT = process.env.WATI_API_ENDPOINT || 'https://live-server-113452.wati.io';
 const WATI_API_TOKEN = process.env.WATI_API_TOKEN;
 
-// Helper function to send message via WATI API
+
 async function sendWATIMessage(phoneNumber, message) {
   try {
     const response = await axios.post(
@@ -44,10 +43,9 @@ async function sendWATIMessage(phoneNumber, message) {
   }
 }
 
-// Helper function to get AI response from Gemini
+
 async function getGeminiResponse(userMessage, phoneNumber) {
   try {
-    // Create a context-aware prompt
     const prompt = `
     You are a helpful WhatsApp chatbot assistant. 
     User message: "${userMessage}"
@@ -69,7 +67,7 @@ async function getGeminiResponse(userMessage, phoneNumber) {
   }
 }
 
-// Main webhook endpoint for WATI
+
 app.post('/webhook', async (req, res) => {
   try {
     console.log('Webhook received:', JSON.stringify(req.body, null, 2));
@@ -122,7 +120,7 @@ app.post('/webhook', async (req, res) => {
   }
 });
 
-// Health check endpoint
+
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'healthy', 
@@ -132,9 +130,10 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Test endpoint to verify Gemini integration
 app.post('/test-gemini', async (req, res) => {
   try {
+    console.log("Here us env key" ,process.env.GEMINI_API_KEY ,'Test Gemini endpoint received:',
+         req.body, );
     const { message } = req.body;
     const response = await getGeminiResponse(message || 'Hello, how are you?', 'test');
     res.json({ success: true, response });
@@ -143,7 +142,7 @@ app.post('/test-gemini', async (req, res) => {
   }
 });
 
-// Test endpoint to verify WATI integration
+
 app.post('/test-wati', async (req, res) => {
   try {
     const { phoneNumber, message } = req.body;
